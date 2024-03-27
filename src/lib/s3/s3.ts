@@ -20,7 +20,6 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 export const uploadFileToS3 = async (archivos: File[], folderName: String): Promise<string[]> => {
 
   const client = new S3Client(s3Client)
-  console.log('uploading files to s3');
 
 
   const Bucket = AWS_BUCKET_NAME;
