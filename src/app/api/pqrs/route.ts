@@ -7,9 +7,7 @@ import {
 } from "@aws-sdk/client-s3";
 
 import {
-  AWS_BUCKET_NAME,
   getUrlFile,
-  s3Client,
   uploadFileToS3,
 } from '@/lib/s3/s3'
 
