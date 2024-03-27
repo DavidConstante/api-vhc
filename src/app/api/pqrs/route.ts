@@ -3,18 +3,15 @@ import { connectDB, disconnectDB } from '@/lib/mongoDB'
 import { Pqrs } from '@/models/pqrs'
 
 import {
-  S3Client,
-  ListObjectsCommand,
-  PutObjectCommand,
   GetObjectCommand,
 } from "@aws-sdk/client-s3";
 
 import {
-  client,
   AWS_BUCKET_NAME,
-
+  getUrlFile,
+  s3Client,
+  uploadFileToS3,
 } from '@/lib/s3/s3'
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 
 
@@ -25,9 +22,6 @@ export async function POST(request: Request) {
     await connectDB();
     const data = await request.formData();
     const archivos = data.getAll('archivos') as File[];
-
-
-
 
 
     const lastNumSolicitud = await Pqrs.findOne().sort({ numeroSolicitud: -1 }).limit(1);
@@ -46,9 +40,6 @@ export async function POST(request: Request) {
     const newPqrs = new Pqrs(Object.fromEntries(data));
 
     const res = await newPqrs.save();
-
-
-
 
     return NextResponse.json({
       message: 'PQRS guardado exitosamente',
@@ -72,14 +63,10 @@ export async function GET(request: Request) {
       const archivos = pqrs.archivos.split('<@>');
 
       const archivosS3 = await Promise.all(archivos.map(async (archivo: string) => {
-        const url = await getSignedUrl(client, new GetObjectCommand({
-          Bucket: AWS_BUCKET_NAME,
-          Key: archivo
-        }), { expiresIn: 3600 });
-
+        const url = await getUrlFile(archivo);
+        console.log(url);
         return url;
-      })
-      )
+      }))
 
       return {
         ...pqrs._doc,
@@ -102,24 +89,4 @@ export async function GET(request: Request) {
   }
 }
 
-
-// * Function AUX
-export const uploadFileToS3 = async (archivos: File[], folderName: String): Promise<string[]> => {
-
-  const Bucket = AWS_BUCKET_NAME;
-  const keys = await Promise.all(
-    archivos.map(async (file) => {
-      const Body = (await file.arrayBuffer()) as Buffer;
-      const Key = `${folderName}/${file.name}`;
-      client.send(new PutObjectCommand({
-        Bucket,
-        Key,
-        Body
-      }));
-      return Key;
-    })
-  );
-  return keys;
-
-}
 

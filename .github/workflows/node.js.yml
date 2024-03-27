@@ -1,0 +1,29 @@
+name: Autazo - Backend CI/CD
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-backend:
+
+    runs-on: self-hosted
+
+    steps:
+    - name: Build Backend Container
+      uses: actions/checkout@v3
+      with:
+        node-version: 20
+        
+    - run: |
+            touch .env
+            echo DATABASE_URL=${{ secrets.DATABASE_URL}} >> .env
+            echo AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME}} >> .env
+            echo AWS_BUCKET_REGION=${{ secrets.AWS_BUCKET_REGION}} >> .env
+            echo AWS_PUBLIC_KEY=${{ secrets.AWS_PUBLIC_KEY}} >> .env
+            echo AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY}} >> .env
+
+
+    - run: yarn build
+    - run: yarn start
+   
+     
