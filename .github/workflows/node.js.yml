@@ -13,16 +13,16 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '20.12' # Cambia esto a la versión de Node.js que necesites
+        node-version: '20.12.0' # Cambia esto a la versión de Node.js que necesites
 
     - name: Create .env file
       run: |
         touch .env
-        echo DATABASE_URL=${{ secrets.DATABASE_URL}} >> .env
         echo AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME}} >> .env
         echo AWS_BUCKET_REGION=${{ secrets.AWS_BUCKET_REGION}} >> .env
         echo AWS_PUBLIC_KEY=${{ secrets.AWS_PUBLIC_KEY}} >> .env
         echo AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY}} >> .env
+        echo DATABASE_URL=${{ secrets.DATABASE_URL}} >> .envn
 
     - name: Install dependencies and build
       run: |
