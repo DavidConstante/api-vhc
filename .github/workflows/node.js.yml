@@ -13,7 +13,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '20' # Cambia esto a la versión de Node.js que necesites
+        node-version: '20.12' # Cambia esto a la versión de Node.js que necesites
 
     - name: Create .env file
       run: |

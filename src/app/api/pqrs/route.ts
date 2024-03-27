@@ -64,7 +64,6 @@ export async function GET(request: Request) {
 
       const archivosS3 = await Promise.all(archivos.map(async (archivo: string) => {
         const url = await getUrlFile(archivo);
-        console.log(url);
         return url;
       }))
 
