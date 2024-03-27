@@ -23,7 +23,7 @@ jobs:
             echo AWS_SECRET_KEY=${{ secrets.AWS_SECRET_KEY}} >> .env
 
 
-    - run: yarn build
-    - run: yarn start
+    - run: npm run build
+    - run: npm start
    
      
